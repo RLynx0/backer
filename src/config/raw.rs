@@ -13,10 +13,10 @@ pub struct Config {
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Template {
-    pub output: Option<OutLvl>,
-    pub method: Option<Method>,
-    pub exclude: Option<Vec<String>>,
-    pub log: Option<Log>,
+    output: Option<OutLvl>,
+    method: Option<Method>,
+    exclude: Option<Vec<String>>,
+    log: Option<Log>,
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -54,6 +54,7 @@ impl Merge<Option<Template>> for Backup {
 
 #[derive(Clone, Debug, Deserialize)]
 pub struct Method {
+    pub sudo: Option<bool>,
     pub delete: Option<bool>,
     pub dry_run: Option<bool>,
 }
@@ -61,6 +62,7 @@ impl Merge<Method> for Method {
     type Output = Method;
     fn merge(self, fallback: Method) -> Self::Output {
         Method {
+            sudo: self.sudo.or(fallback.sudo),
             delete: self.delete.or(fallback.delete),
             dry_run: self.dry_run.or(fallback.dry_run),
         }

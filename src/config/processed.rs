@@ -1,9 +1,11 @@
-use std::{error::Error, fmt, str::FromStr};
+use std::{collections::HashMap, error::Error, fmt, str::FromStr};
 
 use error_stack::{Report, Result, ResultExt};
 use serde::Deserialize;
 
-use super::{raw, Merge};
+use super::{ctx_string::CtxString, raw, Merge};
+
+pub type Context = HashMap<String, CtxString>;
 
 #[derive(Debug)]
 pub struct ParseConfigError;
@@ -16,11 +18,11 @@ impl fmt::Display for ParseConfigError {
 
 #[derive(Debug, Default)]
 pub struct Backup {
-    pub source: String,
-    pub target: String,
+    pub source: CtxString,
+    pub target: CtxString,
     pub output: OutLvl,
     pub method: Method,
-    pub exclude: Vec<String>,
+    pub exclude: Vec<CtxString>,
     pub log: Log,
 }
 
@@ -77,6 +79,7 @@ impl FromStr for OutLvl {
 
 #[derive(Debug, Default)]
 pub struct Method {
+    pub sudo: bool,
     pub delete: bool,
     pub dry_run: bool,
 }
@@ -84,6 +87,7 @@ impl Merge<Method> for raw::Method {
     type Output = Method;
     fn merge(self, fallback: Method) -> Self::Output {
         Method {
+            sudo: self.sudo.unwrap_or(fallback.sudo),
             delete: self.delete.unwrap_or(fallback.delete),
             dry_run: self.dry_run.unwrap_or(fallback.dry_run),
         }
@@ -92,18 +96,18 @@ impl Merge<Method> for raw::Method {
 
 #[derive(Debug)]
 pub struct Log {
-    pub append: bool,
-    pub stderr: String,
-    pub stdout: String,
-    pub format: String,
+    append: bool,
+    stderr: CtxString,
+    stdout: CtxString,
+    format: CtxString,
 }
 impl Default for Log {
     fn default() -> Self {
         Self {
             append: bool::default(),
-            stderr: String::from("errors.log"),
-            stdout: String::from("output.log"),
-            format: String::from("$log"),
+            stderr: CtxString::new("errors.log").unwrap(),
+            stdout: CtxString::new("output.log").unwrap(),
+            format: CtxString::new("${log}").unwrap(),
         }
     }
 }
@@ -112,9 +116,18 @@ impl Merge<Log> for raw::Log {
     fn merge(self, fallback: Log) -> Self::Output {
         Log {
             append: self.append.unwrap_or(fallback.append),
-            stderr: self.stderr.unwrap_or(fallback.stderr),
-            stdout: self.stdout.unwrap_or(fallback.stdout),
-            format: self.format.unwrap_or(fallback.format),
+            stderr: self
+                .stderr
+                .map(|s| CtxString::new(&s).unwrap())
+                .unwrap_or(fallback.stderr),
+            stdout: self
+                .stdout
+                .map(|s| CtxString::new(&s).unwrap())
+                .unwrap_or(fallback.stdout),
+            format: self
+                .format
+                .map(|s| CtxString::new(&s).unwrap())
+                .unwrap_or(fallback.format),
         }
     }
 }
@@ -122,7 +135,10 @@ impl Merge<Log> for raw::Log {
 impl Merge<Backup> for raw::Backup {
     type Output = Result<Backup, ParseConfigError>;
     fn merge(self, fallback: Backup) -> Self::Output {
-        let exclude = self.exclude.unwrap_or(fallback.exclude);
+        let exclude = self
+            .exclude
+            .map(|s| s.into_iter().map(|s| CtxString::new(&s).unwrap()).collect())
+            .unwrap_or(fallback.exclude);
         let output = match self.output {
             Some(o) => TryInto::<OutLvl>::try_into(o).change_context(ParseConfigError)?,
             None => fallback.output,
@@ -137,8 +153,12 @@ impl Merge<Backup> for raw::Backup {
         };
 
         Ok(Backup {
-            source: self.source,
-            target: self.target,
+            source: CtxString::new(&self.source)
+                .change_context(ParseConfigError)
+                .attach_printable(format!("Failed to parse {:?}", self.source))?,
+            target: CtxString::new(&self.target)
+                .change_context(ParseConfigError)
+                .attach_printable(format!("Failed to parse {:?}", self.target))?,
             output,
             method,
             exclude,

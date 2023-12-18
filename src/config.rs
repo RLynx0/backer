@@ -1,17 +1,22 @@
+use std::collections::HashMap;
 use std::error::Error;
 use std::fmt;
 use std::{env, fs, path::PathBuf};
 
 use error_stack::{Result, ResultExt};
 
+use self::ctx_string::{CtxParseError, CtxString};
+
 pub use self::{
-    processed::{Backup, OutLvl},
+    processed::{Backup, Context, OutLvl},
     raw::Config,
 };
 
 mod ctx_string;
 mod processed;
 mod raw;
+
+const CONFIG_FILE_NAME: &str = "backer.toml";
 
 #[derive(Debug)]
 pub struct ConfigError;
@@ -42,23 +47,57 @@ where
 }
 
 pub fn load_config() -> Result<Config, ConfigError> {
-    let mut confpath = PathBuf::from(env::var("HOME").expect("Could not get Home variable"));
+    let mut confpath = PathBuf::from(
+        env::var("HOME")
+            .attach_printable("Could not get Home variable")
+            .change_context(ConfigError)?,
+    );
     confpath.push(".config");
-    confpath.push("backer.toml");
-    let config = fs::read_to_string(confpath).expect("Could not read config path");
+    confpath.push(CONFIG_FILE_NAME);
+    let config = fs::read_to_string(&confpath)
+        .change_context(ConfigError)
+        .attach_printable(format!("Failed to read {:?}", confpath))?;
     toml::from_str(&config).change_context(ConfigError)
 }
 
-pub fn generate_settings(config: raw::Config) -> Result<Vec<Backup>, ConfigError> {
-    config
-        .run
-        .unwrap_or_default()
+pub fn generate_settings(
+    Config {
+        template,
+        run,
+        variables,
+    }: Config,
+) -> Result<Vec<(Context, Backup)>, ConfigError> {
+    run.unwrap_or_default()
         .into_iter()
-        .map(|backup| {
-            backup
-                .merge(config.template.clone())
-                .merge(Backup::default())
+        .map(|backup| backup.merge(template.clone()).merge(Backup::default()))
+        .map(|backup_res| {
+            let backup = backup_res.change_context(ConfigError)?;
+            let variables = variables.clone().unwrap_or_default();
+
+            Ok((
+                generate_context(variables, &backup)
+                    .change_context(ConfigError)
+                    .attach_printable("Failed to generate Backup Context")?,
+                backup,
+            ))
         })
         .collect::<Result<Vec<_>, _>>()
-        .change_context(ConfigError)
+}
+
+fn generate_context(
+    variables: HashMap<String, String>,
+    backup: &Backup,
+) -> Result<Context, CtxParseError> {
+    let mut context = variables
+        .into_iter()
+        .map(|(k, v)| Ok((k, CtxString::new(&v)?)))
+        .collect::<Result<HashMap<_, _>, _>>()?;
+
+    for (key, val) in [("source", &backup.source), ("target", &backup.target)] {
+        if !context.contains_key(key) {
+            context.insert(key.to_string(), val.clone());
+        };
+    }
+
+    Ok(context)
 }
