@@ -165,6 +165,7 @@ Here's an overview over all values found in the
     (bool)
     
     Only generate output, don't copy anything.
+    
     Will still generate logs.
     
 - `log`
@@ -194,16 +195,17 @@ Here's an overview over all values found in the
   - `format`
     (format string)
     
-    Format of logs. Can reference
-    the `${log}` variable, which
-    refers to stdout / stderr.
+    Format of logs.
+    
+    Can reference the `${log}` variable,
+    which refers to `stdout` / `stderr`.
 
 
 <a name="FormatStrings" />
 
 ## Format Strings
 Backer has it's own system for formatting strings. 
-Most configuration values rely on these format strings.
+Many configuration values rely on these format strings.
 
 ### Variables
 A variable can be referenced from within a format string
