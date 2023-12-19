@@ -7,6 +7,8 @@ use self::parser::ctx_str as parse_ctx_str;
 
 mod parser;
 
+pub type Context = HashMap<String, CtxString>;
+
 #[derive(Debug)]
 pub struct CtxWriteError;
 impl Error for CtxWriteError {}
@@ -45,7 +47,7 @@ impl CtxString {
         }
     }
 
-    pub fn to_string(&self, context: &HashMap<String, CtxString>) -> Result<String, CtxWriteError> {
+    pub fn to_string(&self, context: &Context) -> Result<String, CtxWriteError> {
         self.0
             .iter()
             .map(|token| match token {
