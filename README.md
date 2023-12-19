@@ -5,8 +5,8 @@ I decided to make this toy project because I just wanted a small command that
 would do the rsync backups I wanted and log the result.
 
 And that is exactly what Backer is. The TOML-based configuration for Backer
-aims to be flexible and allows for intricately formatted logs.
-Being built in Rust, it's robust and gives detailed Error messages.
+aims to be flexible and allows for intricately formatted logs.  
+Being built in Rust, it's robust and gives detailed Error messages.  
 Yeah, they aren't very pretty yet, but I'll work on that.
 
 The project is at the moment Linux-only, as it relies on the `rsync`-command.
@@ -14,7 +14,6 @@ The project is at the moment Linux-only, as it relies on the `rsync`-command.
 
 # Message to myself
 **Still to be implemented**
-
 - Preamptive checks for the source and target files of backups
 - Formatted summary of backups at the end of a run call
 - Check for recursive ctx-variables
@@ -65,7 +64,7 @@ Backer's config is structured into
 
 ### `[variables]`
 You can define custom variables in this section!
-These can be referenced from within [format strings](#FormatStrings).
+These can be referenced from within [format strings](#FormatStrings).  
 The value of a variable is itself a format string and variables
 can refer to each other.
 
@@ -94,15 +93,14 @@ stdout = "output.log"
 format = "${log}"
 ```
 
-For the specific functions of these values,
+For the specific functions of these values, 
 see [below](#ValuesAndSections).
 
-
-### `[[run]]`
+### [[run]]
 A `run` definition can include override any value from the
 `template`-section - The structure is the exact same.
 
-However, it must include a `source` and a `target` value,
+However, it must include a `source` and a `target` value, 
 to define what file or directory should be backed up to
 where. These values are only found in a `run`-definition
 and have no default value, as I'd find it a bit stupid to
@@ -110,6 +108,7 @@ define a default target and source location that is used
 by multiple, consecutively executed backups.
 
 <a name="ValuesAndSections" />
+
 ## Values and Sub-Sections
 Here's an overview over all values found in the
 `template`- and `run`-sections.
