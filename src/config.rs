@@ -12,6 +12,16 @@ use self::error::{
 mod error;
 mod runner;
 
+// --- Constants
+
+const DEFAULT_OUT_SAVE: &str = "output.log";
+const DEFAULT_ERR_SAVE: &str = "errors.log";
+const DEFAULT_LOG_FORMAT: &str = "${log}";
+
+const SOURCE_BINDING: &str = "source";
+const TARGET_BINDING: &str = "target";
+const LOG_BINDING: &str = "target";
+
 // --- Merge
 
 trait Merge<T> {
@@ -43,7 +53,7 @@ impl FromStr for Config {
     type Err = Report<ConfigParseError>;
 
     fn from_str(s: &str) -> result::Result<Self, Self::Err> {
-        toml::from_str(&s)
+        toml::from_str(s)
             .change_context(ConfigParseError)
             .attach_printable_lazy(|| format!("{:?} could not be parsed", s))
     }
@@ -264,9 +274,9 @@ impl Default for Log {
     fn default() -> Self {
         Log {
             append: false,
-            stderr: CtxString::new("errors.log").unwrap(),
-            stdout: CtxString::new("output.log").unwrap(),
-            format: CtxString::new("${log}").unwrap(),
+            stderr: CtxString::new(DEFAULT_ERR_SAVE).unwrap(),
+            stdout: CtxString::new(DEFAULT_OUT_SAVE).unwrap(),
+            format: CtxString::new(DEFAULT_LOG_FORMAT).unwrap(),
         }
     }
 }

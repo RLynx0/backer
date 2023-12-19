@@ -38,14 +38,14 @@ impl CtxString {
         CtxString(vec![Token::Literal(string.to_owned())])
     }
 
-    pub fn to_string(&self, context: &Context) -> Result<String, CtxWriteError> {
+    pub fn evaluate(&self, context: &Context) -> Result<String, CtxWriteError> {
         self.0
             .iter()
             .map(|token| match token {
                 Token::Literal(s) => Ok(s.clone()),
                 Token::Var(v) => context
                     .get(v)
-                    .map(|s| s.to_string(context))
+                    .map(|s| s.evaluate(context))
                     .unwrap_or(Err(Report::new(CtxWriteError)
                         .attach_printable(format!("Variable {:?} is not defined", v)))),
                 Token::DateTime(d) => Ok(Local::now().format(d).to_string()),
