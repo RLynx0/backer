@@ -261,7 +261,7 @@ escaped = 'There is a \$, but no variable'
 ```
 
 If you use regular quotation marks in your configuration, you will have to use
-_tow_ consecutive backslashes to escape a `$` or `%`:
+_two_ consecutive backslashes to escape a `$` or `%`:
 ```toml
 escaped = "E\\$cape"
 ```
