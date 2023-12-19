@@ -215,7 +215,7 @@ str = "${<var>}"
 Variable names can technically be any string. 
 They can even contain `}` by escaping:
 ```toml
-str = `${example\{\}}`
+str = '${example\{\}}'
 ```
 
 However, it's adviced to stick to more conventional variable names.
