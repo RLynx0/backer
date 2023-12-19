@@ -12,19 +12,6 @@ Yeah, they aren't very pretty yet, but I'll work on that.
 The project is at the moment Linux-only, as it relies on the `rsync`-command.
 
 
-# Message to myself
-**Still to be implemented**
-- Preamptive checks for the source and target files of backups
-- Formatted summary of backups at the end of a run call
-- Check for recursive ctx-variables
-- A better system for config errors and ctx-string-errors
-- Prettier errors
-- Subcommands
-  - preview
-  - manual
-  - maybe more...?
-
-
 # Configuration
 Backer is configured via `$HOME/.config/backer.toml`.
 
@@ -268,7 +255,20 @@ _two_ consecutive backslashes to escape a `$` or `%`:
 escaped = "E\\$cape"
 ```
 
-To avoid this, you can instead use toml's literal strings:
+To avoid this, you can instead use `toml`'s literal strings:
 ```toml
 escaped = 'E\$cape'
 ```
+
+
+# Message to myself
+**Still to be implemented**
+- Preemptive checks for the source and target files of backups
+- Formatted summary of backups at the end of a run call
+- Check for recursive ctx-variables
+- A better system for config errors and ctx-string-errors
+- Prettier errors
+- Subcommands
+  - preview
+  - manual
+  - maybe more...?
