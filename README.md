@@ -111,7 +111,6 @@ by multiple, consecutively executed backups.
 
 <a name="ValuesAndSections" />
 ## Values and Sub-Sections
-
 Here's an overview over all values found in the
 `template`- and `run`-sections.
 
@@ -202,8 +201,8 @@ Here's an overview over all values found in the
 
 
 <a name="FormatStrings" />
-## Format Strings
 
+## Format Strings
 Backer has it's own system for formatting strings.
 Most configuration values rely on these format strings.
 
