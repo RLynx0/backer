@@ -16,7 +16,7 @@ mod runner;
 
 const DEFAULT_OUT_SAVE: &str = "output.log";
 const DEFAULT_ERR_SAVE: &str = "errors.log";
-const VARIABLE_LOG: &str = "${log}";
+const DEFAULT_LOG_FORMAT: &str = "${log}";
 
 const SOURCE_BINDING: &str = "source";
 const TARGET_BINDING: &str = "target";
