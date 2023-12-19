@@ -207,10 +207,17 @@ Most configuration values rely on these format strings.
 
 ### Variables
 A variable can be referenced from within a format string
-like this: `"${<var>}"`.
+like this:
+```toml
+str = "${<var>}"
+```
 
 Variable names can technically be any string. 
-They can even contain `}` by escaping: `"${example\{\}}"`. 
+They can even contain `}` by escaping:
+```toml
+str = "${example\{\}}"
+```
+
 However, it's adviced to stick to more conventional variable names.
 
 Backer's format strings can reference any variable defined in
@@ -226,10 +233,14 @@ The `source`, `target` and `log` variables can be overwritten in the
 for, so keep that in mind!
 
 ### DateTime
-Format strings can also compute date-time information like so: `"%<atom>"`. 
+Format strings can also compute date-time information like so:
+```toml
+dt = "%<atom>"
+```
+
 Take a look at the custom `date`-variable defined in the example config:
 ```toml
-date="%Y-%m-%d"
+date = "%Y-%m-%d"
 ```
 `%Y`, `%m` and `%d` refer to the current year, month and day, respectively. 
 The whole string would compute to something like `2023-12-19`.
@@ -244,8 +255,18 @@ be taken as a literal string. That includes `{` and `}`. Even though these
 are part of referencing a variable, you can use them in literal strings freely.
 
 In cas you do want to use a literal `$` or `%d` in a format string, you can
-escape them with a backslash: `'There is a \$, but no variable'`.
+escape them with a backslash:
+```toml
+escaped = 'There is a \$, but no variable'
+```
 
 If you use regular quotation marks in your configuration, you will have to use
-_tow_ consecutive backslashes to escape a `$` or `%`: `"E\\$cape"`. 
-To avoid this, you can instead use toml's literal strings: `'E\$cape'`
+_tow_ consecutive backslashes to escape a `$` or `%`:
+```toml
+escaped = "E\\$cape"
+```
+
+To avoid this, you can instead use toml's literal strings:
+```toml
+escaped = 'E\$cape'
+```
