@@ -42,6 +42,17 @@ impl Error for BackupCompileError {}
 
 impl fmt::Display for BackupCompileError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Failed to compile Backup")
+    }
+}
+
+#[derive(Debug)]
+pub(crate) struct BackupRunError;
+
+impl Error for BackupRunError {}
+
+impl fmt::Display for BackupRunError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Failed to run Backup")
     }
 }

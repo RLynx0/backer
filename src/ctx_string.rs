@@ -1,30 +1,17 @@
-use std::{collections::HashMap, error::Error, fmt::Display};
+use std::collections::HashMap;
 
 use chrono::Local;
 use error_stack::{Report, Result};
 
-use self::parser::ctx_str as parse_ctx_str;
+use self::{
+    error::{CtxParseError, CtxWriteError},
+    parser::ctx_str as parse_ctx_str,
+};
 
+mod error;
 mod parser;
 
 pub type Context = HashMap<String, CtxString>;
-
-#[derive(Debug)]
-pub struct CtxWriteError;
-impl Error for CtxWriteError {}
-impl Display for CtxWriteError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Failed to write Context String")
-    }
-}
-#[derive(Debug)]
-pub struct CtxParseError;
-impl Error for CtxParseError {}
-impl Display for CtxParseError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Failed to parse Context String")
-    }
-}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 enum Token {
@@ -47,6 +34,10 @@ impl CtxString {
         }
     }
 
+    pub fn literal(string: &str) -> CtxString {
+        CtxString(vec![Token::Literal(string.to_owned())])
+    }
+
     pub fn to_string(&self, context: &Context) -> Result<String, CtxWriteError> {
         self.0
             .iter()
@@ -56,7 +47,7 @@ impl CtxString {
                     .get(v)
                     .map(|s| s.to_string(context))
                     .unwrap_or(Err(Report::new(CtxWriteError)
-                        .attach_printable(format!("Variable {} is not defined", v)))),
+                        .attach_printable(format!("Variable {:?} is not defined", v)))),
                 Token::DateTime(d) => Ok(Local::now().format(d).to_string()),
             })
             .collect::<Result<String, _>>()

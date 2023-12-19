@@ -10,7 +10,9 @@ use config::Config;
 use opt::Opt;
 
 mod config;
+mod ctx_string;
 mod opt;
+mod runner;
 
 const CONFIG_FILE_NAME: &str = "backer.toml";
 
@@ -30,12 +32,11 @@ fn run() {
     confpath.push(CONFIG_FILE_NAME);
     let config = fs::read_to_string(&confpath).unwrap();
     let (shared_context, runners) = Config::from_str(&config).unwrap().build().unwrap();
-    runners
-        .into_iter()
-        .for_each(|runner| match runner.as_args(&shared_context) {
-            Ok(c) => println!("{:?}", c),
-            Err(e) => eprintln!("{:?}", e),
-        });
+    for runner in runners {
+        if let Err(e) = runner.run(&shared_context) {
+            eprintln!("{e:#?}");
+        }
+    }
 }
 
 fn check_rsync_exists() {

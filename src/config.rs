@@ -3,14 +3,12 @@ use std::{collections::HashMap, result, str::FromStr};
 use error_stack::{Report, Result, ResultExt};
 use serde::Deserialize;
 
-use self::{
-    ctx_string::{Context, CtxString},
-    error::{
-        BackupBuildError, ConfigBuildError, ConfigParseError, LogBuildError, OutLvlParseError,
-    },
+use crate::ctx_string::{Context, CtxString};
+
+use self::error::{
+    BackupBuildError, ConfigBuildError, ConfigParseError, LogBuildError, OutLvlParseError,
 };
 
-mod ctx_string;
 mod error;
 mod runner;
 
