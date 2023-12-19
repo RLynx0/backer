@@ -161,7 +161,7 @@ Here's an overview over all values found in the
     Delete files or directories that are in the
     target but not in the source directory.
     
- - `dry_run`
+  - `dry_run`
    (bool)
    
    Only generate output, don't copy anything.
@@ -202,23 +202,23 @@ Here's an overview over all values found in the
 <a name="FormatStrings" />
 
 ## Format Strings
-Backer has it's own system for formatting strings.
+Backer has it's own system for formatting strings. 
 Most configuration values rely on these format strings.
 
 ### Variables
 A variable can be referenced from within a format string
 like this: `"${<var>}"`.
 
-Variable names can technically be any string.
-They can even contain `}` by escaping: `"${example\{\}}"`.
+Variable names can technically be any string. 
+They can even contain `}` by escaping: `"${example\{\}}"`. 
 However, it's adviced to stick to more conventional variable names.
 
 Backer's format strings can reference any variable defined in
-the config's `variables` section.
+the config's `variables` section. 
 Additionaly, `source` and `target` are provided for every
-format string related to a specific backup in the `run`-section.
-The `log.format` string can also reference the special `log`-variable,
-which refers to either the standard output or standard error of rsync,
+format string related to a specific backup in the `run`-section. 
+The `log.format` string can also reference the special `log`-variable, 
+which refers to either the standard output or standard error of rsync, 
 depending on what is logged at the moment.
 
 The `source`, `target` and `log` variables can be overwritten in the
@@ -226,15 +226,15 @@ The `source`, `target` and `log` variables can be overwritten in the
 for, so keep that in mind!
 
 ### DateTime
-Format strings can also compute date-time information like so: `"%<atom>"`.
+Format strings can also compute date-time information like so: `"%<atom>"`. 
 Take a look at the custom `date`-variable defined in the example config:
 ```toml
 date="%Y-%m-%d"
 ```
-`%Y`, `%m` and `%d` refer to the current year, month and day, respectively.
+`%Y`, `%m` and `%d` refer to the current year, month and day, respectively. 
 The whole string would compute to something like `2023-12-19`.
 
-To be honest, the functionality is straight up stolen from the `chrono`-crate.
+To be honest, the functionality is straight up stolen from the `chrono`-crate. 
 See [their documentation](https://docs.rs/chrono/0.4.31/chrono/format/strftime/index.html)
 for a full list of possible atoms.
 
@@ -247,5 +247,5 @@ In cas you do want to use a literal `$` or `%d` in a format string, you can
 escape them with a backslash: `'There is a \$, but no variable'`.
 
 If you use regular quotation marks in your configuration, you will have to use
-_tow_ consecutive backslashes to escape a `$` or `%`: `"E\\$cape"`.
+_tow_ consecutive backslashes to escape a `$` or `%`: `"E\\$cape"`. 
 To avoid this, you can instead use toml's literal strings: `'E\$cape'`
