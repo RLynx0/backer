@@ -162,11 +162,11 @@ Here's an overview over all values found in the
     target but not in the source directory.
     
   - `dry_run`
-   (bool)
-   
-   Only generate output, don't copy anything.
-   Will still generate logs.
-   
+    (bool)
+    
+    Only generate output, don't copy anything.
+    Will still generate logs.
+    
 - `log`
   (table)
   
