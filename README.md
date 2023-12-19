@@ -109,9 +109,9 @@ and have no default value, as I'd find it a bit stupid to
 define a default target and source location that is used
 by multiple, consecutively executed backups.
 
-<a name="ValuesAndSections">
+<a name="ValuesAndSections" />
 ## Values and Sub-Sections
-</a>
+
 Here's an overview over all values found in the
 `template`- and `run`-sections.
 
@@ -201,9 +201,9 @@ Here's an overview over all values found in the
     refers to stdout / stderr.
 
 
-<a name="FormatStrings">
+<a name="FormatStrings" />
 ## Format Strings
-</a>
+
 Backer has it's own system for formatting strings.
 Most configuration values rely on these format strings.
 
