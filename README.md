@@ -62,7 +62,7 @@ Backer's config is structured into
 # ...
 ```
 
-### `[variables]`
+### [variables]
 You can define custom variables in this section!
 These can be referenced from within [format strings](#FormatStrings).  
 The value of a variable is itself a format string and variables
@@ -71,7 +71,7 @@ can refer to each other.
 At the moment, variables can even be recursive, which leads to a
 very unceremonial stack overflow.
 
-### `[template]`
+### [template]
 This section allows you to override the default settings
 for backups.
 
