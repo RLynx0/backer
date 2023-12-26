@@ -1,6 +1,5 @@
 use std::{
-    fs::OpenOptions,
-    io::{BufRead, BufReader, Write},
+    io::{BufRead, BufReader},
     path::Path,
     process::{Command, ExitStatus, Stdio},
     sync::mpsc::channel,
@@ -9,9 +8,12 @@ use std::{
 
 use error_stack::{Context, Report, Result, ResultExt};
 
-use crate::runner::error::ThreadError;
+use crate::{
+    fs::{save, SaveLogError},
+    runner::error::ThreadError,
+};
 
-use self::error::{CommandRunError, SaveLogError};
+use self::error::CommandRunError;
 
 mod error;
 
@@ -21,7 +23,7 @@ pub(crate) fn run_command<F, E>(
     save_stderr: &str,
     append: bool,
     formatter: F,
-) -> Result<ExitStatus, CommandRunError>
+) -> Result<((ExitStatus, String, String), Result<(), SaveLogError>), CommandRunError>
 where
     F: Fn(&str) -> Result<String, E>,
     E: Context,
@@ -73,25 +75,11 @@ where
     let stdout = out_rx.into_iter().collect::<Vec<String>>().join("\n");
     let stderr = err_rx.into_iter().collect::<Vec<String>>().join("\n");
 
-    let stdout = &formatter(&stdout).change_context(CommandRunError)?;
-    let stderr = &formatter(&stderr).change_context(CommandRunError)?;
+    let stdout = formatter(&stdout).change_context(CommandRunError)?;
+    let stderr = formatter(&stderr).change_context(CommandRunError)?;
 
-    save(stdout, Path::new(save_stdout), append).change_context(CommandRunError)?;
-    save(stderr, Path::new(save_stderr), append).change_context(CommandRunError)?;
+    let log_result = save(&stdout, Path::new(save_stdout), append)
+        .and_then(|_| save(&stderr, Path::new(save_stderr), append));
 
-    Ok(status)
-}
-
-fn save(content: &str, path: &Path, append: bool) -> Result<(), SaveLogError> {
-    let mut file = OpenOptions::new()
-        .write(true)
-        .create(true)
-        .append(append)
-        .open(path)
-        .change_context(SaveLogError)
-        .attach_printable_lazy(|| format!("Failed to open {:?}", path))?;
-
-    writeln!(file, "{}", content)
-        .change_context(SaveLogError)
-        .attach_printable_lazy(|| format!("Failed to write to {:?}", file))
+    Ok(((status, stdout, stderr), log_result))
 }

@@ -11,15 +11,6 @@ impl fmt::Display for CommandRunError {
 }
 
 #[derive(Debug)]
-pub(crate) struct SaveLogError;
-impl Error for SaveLogError {}
-impl fmt::Display for SaveLogError {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Failed to save Log")
-    }
-}
-
-#[derive(Debug)]
 pub(crate) struct ThreadError;
 impl Error for ThreadError {}
 impl fmt::Display for ThreadError {

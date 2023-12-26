@@ -10,7 +10,8 @@ use self::error::{
 };
 
 mod error;
-mod runner;
+mod preview;
+mod run;
 
 // --- Constants
 
@@ -60,7 +61,7 @@ impl FromStr for Config {
 }
 
 impl Config {
-    pub fn build(self) -> Result<(Context, Vec<BackupRunner>), ConfigBuildError> {
+    pub fn build(self) -> Result<(Context, Vec<Backup>), ConfigBuildError> {
         let shared_context = self
             .variables
             .iter()
@@ -74,7 +75,7 @@ impl Config {
             .into_iter()
             .flatten()
             .map(|bcn| bcn.merge(self.template.clone()).build())
-            .collect::<Result<Vec<BackupRunner>, _>>()
+            .collect::<Result<Vec<Backup>, _>>()
             .change_context(error::ConfigBuildError)?;
 
         Ok((shared_context, runners))
@@ -116,8 +117,8 @@ impl Merge<Option<Template>> for BackupConfig {
 }
 
 impl BackupConfig {
-    fn build(&self) -> Result<BackupRunner, BackupBuildError> {
-        Ok(BackupRunner {
+    fn build(&self) -> Result<Backup, BackupBuildError> {
+        Ok(Backup {
             source: CtxString::new(&self.source).change_context(BackupBuildError)?,
             target: CtxString::new(&self.target).change_context(BackupBuildError)?,
             output: match &self.output {
@@ -246,7 +247,7 @@ impl LogConfig {
 // --- Finalized Runner
 
 #[derive(Debug)]
-pub(crate) struct BackupRunner {
+pub(crate) struct Backup {
     source: CtxString,
     target: CtxString,
     output: OutLvl,

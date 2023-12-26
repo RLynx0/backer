@@ -1,0 +1,144 @@
+ TEMPLATE ║
+══════════╝
+GENERAL
+
+  Exclude: []
+  Output:  verbose
+──────────────────────────────────────────────────────────────
+METHOD
+
+  Sudo:    false
+  Delte:   true
+  Dry run: false
+──────────────────────────────────────────────────────────────
+LOGGING
+
+  Output: /run/media/lynx/LynxSSD-Linux/output.log (NOT FOUND)
+  Errors: /run/media/lynx/LynxSSD-Linux/errors.log (NOT FOUND)
+
+  Append: true
+
+  Example log: 
+  0│ -----------------------
+  1│ > 2023-12-20 - 16:07:45
+  2│ : [Source] ➝  [Target]
+  3│ 
+  4│ [Log goes here]
+  5│ 
+  6│ 
+
+════════════╦═════════════════════════════════════════════════
+ BACKUP 1/2 ║
+════════════╝
+COMMAND
+
+  rsync -aAx --delete --verbose /home/
+  /run/media/lynx/LynxSSD-Linux/home-arch
+──────────────────────────────────────────────────────────────
+GENERAL
+
+  Source:  /home/                                  (OK)
+  Target:  /run/media/lynx/LynxSSD-Linux/home-arch (NOT FOUND)
+
+  Exclude: []
+  Output:  verbose
+──────────────────────────────────────────────────────────────
+METHOD                                      (Same as Template)
+
+  Sudo:    false
+  Delte:   true
+  Dry run: false
+──────────────────────────────────────────────────────────────
+LOGGING                                     (Same as Template)
+
+  Output: /run/media/lynx/LynxSSD-Linux/output.log (NOT FOUND)
+  Errors: /run/media/lynx/LynxSSD-Linux/errors.log (NOT FOUND)
+
+  Append: true
+
+  Example log: 
+  0│ -----------------------
+  1│ > 2023-12-20 - 16:07:45
+  2│ : /home/ ➝  /run/media/lynx/LynxSSD-Linux/home-arch
+  3│ 
+  4│ [Log goes here]
+  5│ 
+  6│ 
+──────────────────────────────────────────────────────────────
+ERRORS
+
+  Failed to run Backup
+  ├╴at src/config/runner.rs:34:10
+  │
+  ├─▶ Failed to run command
+  │   ╰╴at src/runner.rs:79:50
+  │
+  ├─▶ Failed to save Log
+  │   ├╴at src/runner.rs:91:10
+  │   ╰╴Failed to open "/run/media/lynx/LynxSSD-Linux/
+  │     rsync/output.log"
+  │
+  ╰─▶ No such file or directory (os error 2)
+      ╰╴at src/runner.rs:91:10
+
+════════════╦═════════════════════════════════════════════════
+ BACKUP 2/2 ║
+════════════╝
+COMMAND
+
+  sudo rsync -aAx --delete --verbose --exclude=dev/
+  --exclude=home/ --exclude=proc/ --exclude=proc/
+  --exclude=run/ --exclude=sys/ --exclude=tmp/ /
+  /run/media/lynx/LynxSSD-Linux/root-arch
+──────────────────────────────────────────────────────────────
+GENERAL
+
+  Source:  /                                       (OK)
+  Target:  /run/media/lynx/LynxSSD-Linux/root-arch (NOT FOUND)
+
+  Exclude: dev/
+           home/
+           proc/
+           run/
+           sys/
+           tmp/
+
+  Output:  verbose
+──────────────────────────────────────────────────────────────
+METHOD
+
+  Sudo:    true
+  Delete:  true
+  Dry run: false
+──────────────────────────────────────────────────────────────
+LOGGING                                     (Same as Template)
+
+  Output: /run/media/lynx/LynxSSD-Linux/output.log (NOT FOUND)
+  Errors: /run/media/lynx/LynxSSD-Linux/errors.log (NOT FOUND)
+
+  Append: true
+
+  Example log:
+  0│ -----------------------
+  1│ > 2023-12-20 - 16:07:45
+  2│ : / ➝  /run/media/lynx/LynxSSD-Linux/root-arch
+  3│ 
+  4│ [Log goes here]
+  5│ 
+  6│ 
+──────────────────────────────────────────────────────────────
+ERRORS
+
+  Failed to run Backup
+  ├╴at src/config/runner.rs:34:10
+  │
+  ├─▶ Failed to run command
+  │   ╰╴at src/runner.rs:79:50
+  │
+  ├─▶ Failed to save Log
+  │   ├╴at src/runner.rs:91:10
+  │   ╰╴Failed to open "/run/media/lynx/LynxSSD-Linux/
+  │     rsync/output.log"
+  │
+  ╰─▶ No such file or directory (os error 2)
+      ╰╴at src/runner.rs:91:10

@@ -4,12 +4,13 @@ use error_stack::{Result, ResultExt};
 
 use crate::{
     ctx_string::{Context, CtxString},
-    runner,
+    fs::SaveLogError,
+    runner::run_command,
 };
 
 use super::{
     error::{BackupCompileError, BackupRunError},
-    BackupRunner, OutLvl, LOG_BINDING, SOURCE_BINDING, TARGET_BINDING,
+    Backup, OutLvl, LOG_BINDING, SOURCE_BINDING, TARGET_BINDING,
 };
 
 const COMMAND_SUDO: &str = "sudo";
@@ -21,12 +22,15 @@ const ARG_QUIET: &str = "--quiet";
 const ARG_VERBOSE: &str = "--verbose";
 const ARG_EXCLUDE: &str = "--exclude";
 
-impl BackupRunner {
-    pub(crate) fn run(&self, variables: &Context) -> Result<ExitStatus, BackupRunError> {
+impl Backup {
+    pub(crate) fn run(
+        &self,
+        variables: &Context,
+    ) -> Result<((ExitStatus, String, String), Result<(), SaveLogError>), BackupRunError> {
         let (context, command, stdout, stderr) =
             self.compile(variables).change_context(BackupRunError)?;
 
-        runner::run_command(command, &stdout, &stderr, self.log.append, |log| {
+        run_command(command, &stdout, &stderr, self.log.append, |log| {
             let mut context = context.clone();
             context.insert(LOG_BINDING.to_owned(), CtxString::literal(log));
             self.log.format.evaluate(&context)

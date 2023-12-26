@@ -263,13 +263,14 @@ escaped = 'E\$cape'
 
 # Message to myself
 **Still to be implemented**
-- Preemptive checks for the source and target files of backups
-- Formatted summary of backups at the end of a run call
-- Check for recursive `ctx`-variables
-- A better system for config errors and `ctx`-string-errors
-- Prettier errors
-- Subcommands
-  - preview
-  - manual
-  - configure
+- [ ] Better overall structure
+- [ ] Preemptive checks for the source and target files of backups
+- [x] Formatted summary of backups at the end of a run call
+- [ ] Check for recursive `ctx`-variables
+- [ ] A better system for config errors and `ctx`-string-errors
+- [ ] Prettier errors
+- [ ] Subcommands
+  - [ ] preview
+  - [ ] manual
+  - [ ] configure
   - maybe more...?
