@@ -203,7 +203,7 @@ str = "${var}"
 ```
 
 In the above example, the variable `var` is first defined
-as `"some string"` and then referenced from whithin `str`.
+as `"some string"` and then referenced from whithin `str`.  
 When `str` is used, it will also evaluate to `"some string"`.
 
 A slightly more complex example:
@@ -213,7 +213,7 @@ var_b = "ipsum ${var_a} sit"
 var_c = "Lorem ${var_b} amet"
 ```
 
-Here, `var_c` references `var_b`, which itself references `var_a`. 
+Here, `var_c` references `var_b`, which itself references `var_a`.  
 When `var_c` is used, it will evaluate to `"Lorem ipsum dolor sit amet"`.
 
 Variable names can technically be any string. 
