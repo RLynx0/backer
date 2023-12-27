@@ -201,7 +201,6 @@ like this:
 var = "some string"
 str = "${var}"
 ```
-
 In the above example, the variable `var` is first defined
 as `"some string"` and then referenced from whithin `str`.  
 When `str` is used, it will also evaluate to `"some string"`.
@@ -212,7 +211,6 @@ var_a = "dolor"
 var_b = "ipsum ${var_a} sit"
 var_c = "Lorem ${var_b} amet"
 ```
-
 Here, `var_c` references `var_b`, which itself references `var_a`.  
 When `var_c` is used, it will evaluate to `"Lorem ipsum dolor sit amet"`.
 
@@ -222,7 +220,6 @@ They can even contain `}` by escaping:
 "example{}" = "some string"
 str = '${example\{\}}'
 ```
-
 However, it's adviced to stick to more conventional variable names.
 
 Backer's format strings can reference any variable defined in
@@ -242,6 +239,8 @@ Format strings can also compute date-time information like so:
 ```toml
 dt = "%<atom>"
 ```
+Note that the above example would error, because `<atom>` is not in 
+fact a valid datetime-atom.
 
 Take a look at the custom `date`-variable defined in the example config:
 ```toml
@@ -250,16 +249,16 @@ date = "%Y-%m-%d"
 `%Y`, `%m` and `%d` refer to the current year, month and day, respectively. 
 The whole string would compute to something like `2023-12-19`.
 
-To be honest, the functionality is straight up stolen from the `chrono`-crate. 
+To be honest, the functionality is straight up stolen from the `chrono`-crate.  
 See [their documentation](https://docs.rs/chrono/0.4.31/chrono/format/strftime/index.html)
 for a full list of possible atoms.
 
 ### Literal
-Anything part of a format string that isn't preceeded with a `$` or `%` will
-be taken as a literal string. That includes `{` and `}`. Even though these
+Anything part of a format string that isn't preceeded with a `$` or `%` will 
+be taken as a literal string. That includes `{` and `}`. Even though these 
 are part of referencing a variable, you can use them in literal strings freely.
 
-In cas you do want to use a literal `$` or `%d` in a format string, you can
+In case you do want to use a literal `$` or `%` in a format string, you can 
 escape them with a backslash:
 ```toml
 escaped = 'There is a \$, but no variable'
@@ -271,7 +270,8 @@ _two_ consecutive backslashes to escape a `$` or `%`:
 escaped = "E\\$cape"
 ```
 
-To avoid this, you can instead use `toml`'s literal strings:
+To avoid this, you can instead take advantage of `toml`'s literal strings by 
+using single quotes `'`:
 ```toml
 escaped = 'E\$cape'
 ```
