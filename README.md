@@ -90,9 +90,7 @@ A `run` definition can overwrite any value from the
 However, it must include a `source` and a `target` value, 
 to define what file or directory should be backed up to
 where. These values are only found in a `run`-definition
-and have no default value, as I'd find it a bit stupid to
-define a default target and source location that is used
-by multiple, consecutively executed backups.
+and have no default value.
 
 <a name="ValuesAndSections" />
 
