@@ -59,7 +59,7 @@ At the moment, variables can even be recursive, which leads to a
 very unceremonial stack overflow.
 
 ### [template]
-This section allows you to override the default settings
+This section allows you to overwrite the default settings
 for backups.
 
 For reference, here's all the default values:
@@ -84,7 +84,7 @@ For the specific functions of these values,
 see [below](#ValuesAndSections).
 
 ### [[run]]
-A `run` definition can include override any value from the
+A `run` definition can include overwrite any value from the
 `template`-section - The structure is the exact same.
 
 However, it must include a `source` and a `target` value, 
