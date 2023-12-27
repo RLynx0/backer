@@ -198,19 +198,35 @@ Many configuration values rely on these format strings.
 A variable can be referenced from within a format string
 like this:
 ```toml
-str = "${<var>}"
+var = "some string"
+str = "${var}"
 ```
+
+In the above example, the variable `var` is first defined
+as `"some string"` and then referenced from whithin `str`.
+When `str` is used, it will also evaluate to `"some string"`.
+
+A slightly more complex example:
+```toml
+var_a = "dolor"
+var_b = "ipsum ${var_a} sit"
+var_c = "Lorem ${var_b} amet"
+```
+
+Here, `var_c` references `var_b`, which itself references `var_a`. 
+When `var_c` is used, it will evaluate to `"Lorem ipsum dolor sit amet"`.
 
 Variable names can technically be any string. 
 They can even contain `}` by escaping:
 ```toml
+"example{}" = "some string"
 str = '${example\{\}}'
 ```
 
 However, it's adviced to stick to more conventional variable names.
 
 Backer's format strings can reference any variable defined in
-the config's `variables` section. 
+the config's `variables`-section. 
 Additionaly, `source` and `target` are provided for every
 format string related to a specific backup in the `run`-section. 
 The `log.format` string can also reference the special `log`-variable, 
