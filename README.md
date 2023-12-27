@@ -84,7 +84,7 @@ For the specific functions of these values,
 see [below](#ValuesAndSections).
 
 ### [[run]]
-A `run` definition can include overwrite any value from the
+A `run` definition can overwrite any value from the
 `template`-section - The structure is the exact same.
 
 However, it must include a `source` and a `target` value, 
