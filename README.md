@@ -226,8 +226,9 @@ for a full list of possible atoms.
 
 ### Literal
 Anything part of a format string that isn't preceeded with a `$` or `%` will 
-be taken as a literal string. That includes `{` and `}`. Even though these 
-are part of referencing a variable, you can use them in literal strings freely.
+be interpreted as a normal `toml` string.  
+That includes `{` and `}`. Even though these are part of referencing a variable, 
+you can use them in literal strings freely.
 
 In case you do want to use a literal `$` or `%` in a format string, you can 
 escape them with a backslash:
