@@ -162,7 +162,7 @@ Here's an overview of all values found in the
 <a name="FormatStrings" />
 
 ## Format Strings
-Backer has it's own system for formatting strings.  
+Backer has it's own system for formatting strings. 
 Many configuration values rely on these format strings.
 
 ### Variables
@@ -195,8 +195,8 @@ However, it's adviced to stick to more conventional variable names.
 
 Backer's format strings can reference any variable defined in
 the config's `variables`-section.  
-Additionaly, `source` and `target` are provided for every
-format string in a `run`-section.  
+Additionaly, the variables `source` and `target` are provided for 
+every format string in a `run`-section.  
 The `log.format` string can also reference the special `log`-variable, 
 which refers to either the standard output or standard error of rsync, 
 depending on what is logged at the moment.
