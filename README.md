@@ -105,11 +105,11 @@ Here's an overview of all values found in the
   
 - `target` (format string)  
   Path to the target file or target 
-  directory of the backup
+  directory of the backup  
   Not definable in `template`
   
 - `exclude` (Array of format strings)  
-  List of files or directories to exclude
+  List of files or directories to exclude 
   from the backup
   
 - `output` (number or string)  
@@ -146,11 +146,11 @@ Here's an overview of all values found in the
     overwriting it
     
   - `stdout` (format string)  
-    Path to the file to log standard
+    Path to the file to log standard 
     output to
     
   - `stderr` (format string)  
-    Path to the file to log standard
+    Path to the file to log standard 
     error to
     
   - `format` (format string)  
