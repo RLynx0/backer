@@ -89,37 +89,31 @@ A `run` definition can overwrite any value from the
 
 However, it must include a `source` and a `target` value, 
 to define what file or directory should be backed up to
-where. These values are only found in a `run`-definition
-and have no default value.
+where. These can not be defined in `template` and have 
+no default values.
 
 <a name="ValuesAndSections" />
 
 ## Values and Sub-Sections
-Here's an overview over all values found in the
+Here's an overview of all values found in the 
 `template`- and `run`-sections.
 
-- `source`
-  (format string)
+- `source` (format string)  
+  Path to the source file or source 
+  directory of the backup  
+  Not definable in `template`
   
-  Path to the source file or source
-  directory of the backup.
+- `target` (format string)  
+  Path to the target file or target 
+  directory of the backup
+  Not definable in `template`
   
-- `target`
-  (format string)
-  
-  Path to the target file or target
-  directory of the backup.
-  
-- `exclude`
-  (Array of format strings)
-  
+- `exclude` (Array of format strings)  
   List of files or directories to exclude
-  from the backup.
+  from the backup
   
-- `output`
-  (number or string)
-  
-  Output level of the backup.
+- `output` (number or string)  
+  Output level of the backup
   
   Possible values:
   | number | string      | summary               |
@@ -128,78 +122,57 @@ Here's an overview over all values found in the
   | `1`    | `"default"` | Normal output.        |
   | `2`    | `"verbose"` | Print verbose output. |
   
-- `method`
-  (table)
-  
-  Details for how the backup
-  should be executed.
+- `method` (table)  
+  Details for how the backup should be executed
   
   Values:
-  - `sudo`
-    (bool)
+  - `sudo` (bool)  
+    Run backup with super user rights
     
-    Run backup with super user rights.
+  - `delete` (bool)  
+    Delete files or directories that are in the 
+    target but not in the source directory
     
-  - `delete`
-    (bool)
+  - `dry_run` (bool)  
+    Only generate output, don't copy anything  
+    Will still generate logs
     
-    Delete files or directories that are in the
-    target but not in the source directory.
-    
-  - `dry_run`
-    (bool)
-    
-    Only generate output, don't copy anything.
-    
-    Will still generate logs.
-    
-- `log`
-  (table)
-  
-  Definitions for logging the backup.
+- `log` (table)  
+  Definitions for logging the backup
   
   Values: 
-  - `append`
-    (bool)
-    
+  - `append` (bool)  
     Append to the log file instead of
     overwriting it
     
-  - `stdout`
-    (format string)
-    
+  - `stdout` (format string)  
     Path to the file to log standard
-    output to.
+    output to
     
-  - `stderr`
-    (format string)
-    
+  - `stderr` (format string)  
     Path to the file to log standard
-    error to.
+    error to
     
-  - `format`
-    (format string)
-    
-    Format of logs.
-    
-    Can reference the `${log}` variable,
-    which refers to `stdout` / `stderr`.
+  - `format` (format string)  
+    Format of logs  
+    Can reference the `${log}` variable, 
+    which refers to `stdout` / `stderr`
 
 
 <a name="FormatStrings" />
 
 ## Format Strings
-Backer has it's own system for formatting strings. 
+Backer has it's own system for formatting strings.  
 Many configuration values rely on these format strings.
 
 ### Variables
-A variable can be referenced from within a format string
+A variable can be referenced from within a format string 
 like this:
 ```toml
 var = "some string"
 str = "${var}"
 ```
-In the above example, the variable `var` is first defined
+In the above example, the variable `var` is first defined 
 as `"some string"` and then referenced from whithin `str`.  
 When `str` is used, it will also evaluate to `"some string"`.
 
@@ -221,15 +194,15 @@ str = '${example\{\}}'
 However, it's adviced to stick to more conventional variable names.
 
 Backer's format strings can reference any variable defined in
-the config's `variables`-section. 
+the config's `variables`-section.  
 Additionaly, `source` and `target` are provided for every
-format string related to a specific backup in the `run`-section. 
+format string in a `run`-section.  
 The `log.format` string can also reference the special `log`-variable, 
 which refers to either the standard output or standard error of rsync, 
 depending on what is logged at the moment.
 
-The `source`, `target` and `log` variables can be overwritten in the
-`variables`-section! This might lead to behaviour you didn't intend
+The `source`, `target` and `log` variables can be overwritten in the 
+`variables`-section! This might lead to behaviour you didn't intend 
 for, so keep that in mind!
 
 ### DateTime
