@@ -54,9 +54,7 @@ impl FromStr for Config {
     type Err = Report<ConfigParseError>;
 
     fn from_str(s: &str) -> result::Result<Self, Self::Err> {
-        toml::from_str(s)
-            .change_context(ConfigParseError)
-            .attach_printable_lazy(|| format!("{:?} could not be parsed", s))
+        toml::from_str(s).change_context(ConfigParseError)
     }
 }
 

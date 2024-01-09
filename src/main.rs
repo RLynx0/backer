@@ -49,7 +49,7 @@ fn run() -> Result<(), FatalError> {
 
     let runners = Vec::from_iter(runners.iter().enumerate().map(|(i, runner)| {
         let num = format!("{}/{}", i + 1, runners.len());
-        println!("\n->> Now running {}\n", num);
+        println!("\n[BACKUP {}]\n", num);
         (num, runner.run(&shared_context))
     }));
 
@@ -87,8 +87,9 @@ fn preview() -> Result<(), FatalError> {
         .build()
         .change_context(FatalError)?;
 
-    for runner in runners {
-        runner.preview(&shared_context);
+    for (i, runner) in runners.iter().enumerate() {
+        let name = format!("{}/{}", i + 1, runners.len());
+        runner.preview(&shared_context, name);
     }
 
     Ok(())

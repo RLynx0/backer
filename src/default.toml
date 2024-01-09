@@ -1,0 +1,28 @@
+# There's a full configuration guide on my github
+# -> See https://github.com/RLynx0/backer
+
+[variables]
+# Define custom variables here
+
+[template]
+exclude = []
+output = "default"
+
+[template.method]
+sudo = false
+delete = false
+dry_run = false
+
+[template.log]
+append = false
+stderr = "errors.log"
+stdout = "output.log"
+format = "${log}"
+
+# Define one [[run]] section for each backup
+# Variables `source` and `target` have to be set
+# Undefined values will be copied from [template]
+#
+# [[run]]
+# source = "source_directory"
+# target = "target_directory"
