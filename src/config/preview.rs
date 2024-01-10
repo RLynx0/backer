@@ -1,6 +1,9 @@
 use std::fmt::Display;
 
-use crate::{config::OutLvl, ctx_string::Context};
+use crate::{
+    config::OutLvl,
+    ctx_string::{Context, CtxString},
+};
 
 use super::Backup;
 
@@ -21,14 +24,8 @@ impl Backup {
             {bar_a}╝",
         );
 
-        let source = match self.source.evaluate(&variables) {
-            Ok(s) => PointContent::Single(s),
-            Err(_) => PointContent::Single(String::from("ERROR")),
-        };
-        let target = match self.target.evaluate(&variables) {
-            Ok(s) => PointContent::Single(s),
-            Err(_) => PointContent::Single(String::from("ERROR")),
-        };
+        let source = PointContent::from(self.source.evaluate(&variables));
+        let target = PointContent::from(self.target.evaluate(&variables));
         let exclude = if self.exclude.is_empty() {
             PointContent::Single(String::from("[]"))
         } else {
@@ -68,6 +65,32 @@ impl Backup {
 enum PointContent {
     Single(String),
     Multi(Vec<String>),
+}
+impl From<String> for PointContent {
+    fn from(value: String) -> Self {
+        PointContent::Single(value)
+    }
+}
+
+impl<T, E> From<Result<T, E>> for PointContent
+where
+    PointContent: From<T>,
+{
+    fn from(value: Result<T, E>) -> Self {
+        match value {
+            Ok(t) => PointContent::from(t),
+            Err(_) => PointContent::Single(String::from("ERROR")),
+        }
+    }
+}
+
+impl<T> From<&[T]> for PointContent
+where
+    PointContent: From<T>,
+{
+    fn from(value: &[T]) -> Self {
+        PointContent::Multi()
+    }
 }
 
 fn section(title: &str, points: &[(&str, PointContent)]) -> String {

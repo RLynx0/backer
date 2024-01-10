@@ -59,7 +59,7 @@ At the moment, variables can even be recursive, which leads to a
 very unceremonial stack overflow.
 
 ### [template]
-This section allows you to override the default settings
+This section allows you to overwrite the default settings
 for backups.
 
 For reference, here's all the default values:
@@ -84,44 +84,36 @@ For the specific functions of these values,
 see [below](#ValuesAndSections).
 
 ### [[run]]
-A `run` definition can include override any value from the
+A `run` definition can overwrite any value from the
 `template`-section - The structure is the exact same.
 
 However, it must include a `source` and a `target` value, 
 to define what file or directory should be backed up to
-where. These values are only found in a `run`-definition
-and have no default value, as I'd find it a bit stupid to
-define a default target and source location that is used
-by multiple, consecutively executed backups.
+where. These can not be defined in `template` and have 
+no default values.
 
 <a name="ValuesAndSections" />
 
 ## Values and Sub-Sections
-Here's an overview over all values found in the
+Here's an overview of all values found in the 
 `template`- and `run`-sections.
 
-- `source`
-  (format string)
+- `source` (format string)  
+  Path to the source file or source 
+  directory of the backup  
+  Not definable in `template`
   
-  Path to the source file or source
-  directory of the backup.
+- `target` (format string)  
+  Path to the target file or target 
+  directory of the backup  
+  Not definable in `template`
   
-- `target`
-  (format string)
+- `exclude` (Array of format strings)  
+  List of files or directories to exclude 
+  from the backup
   
-  Path to the target file or target
-  directory of the backup.
-  
-- `exclude`
-  (Array of format strings)
-  
-  List of files or directories to exclude
-  from the backup.
-  
-- `output`
-  (number or string)
-  
-  Output level of the backup.
+- `output` (number or string)  
+  Output level of the backup
   
   Possible values:
   | number | string      | summary               |
@@ -130,62 +122,41 @@ Here's an overview over all values found in the
   | `1`    | `"default"` | Normal output.        |
   | `2`    | `"verbose"` | Print verbose output. |
   
-- `method`
-  (table)
-  
-  Details for how the backup
-  should be executed.
+- `method` (table)  
+  Details for how the backup should be executed
   
   Values:
-  - `sudo`
-    (bool)
+  - `sudo` (bool)  
+    Run backup with super user rights
     
-    Run backup with super user rights.
+  - `delete` (bool)  
+    Delete files or directories that are in the 
+    target but not in the source directory
     
-  - `delete`
-    (bool)
+  - `dry_run` (bool)  
+    Only generate output, don't copy anything  
+    Will still generate logs
     
-    Delete files or directories that are in the
-    target but not in the source directory.
-    
-  - `dry_run`
-    (bool)
-    
-    Only generate output, don't copy anything.
-    
-    Will still generate logs.
-    
-- `log`
-  (table)
-  
-  Definitions for logging the backup.
+- `log` (table)  
+  Definitions for logging the backup
   
   Values: 
-  - `append`
-    (bool)
-    
+  - `append` (bool)  
     Append to the log file instead of
     overwriting it
     
-  - `stdout`
-    (format string)
+  - `stdout` (format string)  
+    Path to the file to log standard 
+    output to
     
-    Path to the file to log standard
-    output to.
+  - `stderr` (format string)  
+    Path to the file to log standard 
+    error to
     
-  - `stderr`
-    (format string)
-    
-    Path to the file to log standard
-    error to.
-    
-  - `format`
-    (format string)
-    
-    Format of logs.
-    
-    Can reference the `${log}` variable,
-    which refers to `stdout` / `stderr`.
+  - `format` (format string)  
+    Format of logs  
+    Can reference the `${log}` variable, 
+    which refers to `stdout` / `stderr`
 
 
 <a name="FormatStrings" />
@@ -195,37 +166,55 @@ Backer has it's own system for formatting strings.
 Many configuration values rely on these format strings.
 
 ### Variables
-A variable can be referenced from within a format string
+A variable can be referenced from within a format string 
 like this:
 ```toml
-str = "${<var>}"
+var = "some string"
+str = "${var}"
 ```
+In the above example, the variable `var` is first defined 
+as `"some string"` and then referenced from whithin `str`.  
+When `str` is used, it will also evaluate to `"some string"`.
+
+A slightly more complex example:
+```toml
+var_a = "dolor"
+var_b = "ipsum ${var_a} sit"
+var_c = "Lorem ${var_b} amet"
+```
+Here, `var_c` references `var_b`, which itself references `var_a`.  
+When `var_c` is used, it will evaluate to `"Lorem ipsum dolor sit amet"`.
 
 Variable names can technically be any string. 
 They can even contain `}` by escaping:
 ```toml
+"example{}" = "some string"
 str = '${example\{\}}'
 ```
-
-However, it's adviced to stick to more conventional variable names.
+However, it's advised to stick to more conventional variable names.
 
 Backer's format strings can reference any variable defined in
-the config's `variables` section. 
-Additionaly, `source` and `target` are provided for every
-format string related to a specific backup in the `run`-section. 
+the config's `variables`-section.
+
+Additionaly, the variables `source` and `target` are provided for 
+every format string in a `run`-section.
+
 The `log.format` string can also reference the special `log`-variable, 
 which refers to either the standard output or standard error of rsync, 
 depending on what is logged at the moment.
 
-The `source`, `target` and `log` variables can be overwritten in the
-`variables`-section! This might lead to behaviour you didn't intend
+The `source`, `target` and `log` variables can 
+be overwritten in the `variables`-section!  
+This might lead to behaviour you didn't intend 
 for, so keep that in mind!
 
 ### DateTime
-Format strings can also compute date-time information like so:
+Format strings can also compute datetime information like so:
 ```toml
 dt = "%<atom>"
 ```
+Note that the above example would error, because `<atom>` is not in 
+fact a valid datetime-atom.
 
 Take a look at the custom `date`-variable defined in the example config:
 ```toml
@@ -234,16 +223,17 @@ date = "%Y-%m-%d"
 `%Y`, `%m` and `%d` refer to the current year, month and day, respectively. 
 The whole string would compute to something like `2023-12-19`.
 
-To be honest, the functionality is straight up stolen from the `chrono`-crate. 
+To be honest, the functionality is straight up stolen from the `chrono`-crate.  
 See [their documentation](https://docs.rs/chrono/0.4.31/chrono/format/strftime/index.html)
 for a full list of possible atoms.
 
 ### Literal
-Anything part of a format string that isn't preceeded with a `$` or `%` will
-be taken as a literal string. That includes `{` and `}`. Even though these
-are part of referencing a variable, you can use them in literal strings freely.
+Anything part of a format string that isn't preceeded with a `$` or `%` will 
+be interpreted as a normal `toml` string.  
+That includes `{` and `}`. Even though these are part of referencing a variable, 
+you can use them in literal strings freely.
 
-In cas you do want to use a literal `$` or `%d` in a format string, you can
+In case you do want to use a literal `$` or `%` in a format string, you can 
 escape them with a backslash:
 ```toml
 escaped = 'There is a \$, but no variable'
@@ -255,7 +245,8 @@ _two_ consecutive backslashes to escape a `$` or `%`:
 escaped = "E\\$cape"
 ```
 
-To avoid this, you can instead use `toml`'s literal strings:
+To avoid this, you can instead take advantage of `toml`'s literal strings by 
+using single quotes `'`:
 ```toml
 escaped = 'E\$cape'
 ```
