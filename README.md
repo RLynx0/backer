@@ -17,6 +17,9 @@ Backer is configured via `$HOME/.config/backer.toml`.
 
 An example config:
 ```toml
+[settings.preview]
+interactive = true
+
 [variables]
 date = "%Y-%m-%d"
 log_dir = "~/backer-logs"
@@ -31,11 +34,15 @@ log.stdout = "${log_base}.out"
 
 ## Structure
 Backer's config is structured into
+- a `setting`-section
 - a `variables`-section
 - a `template`-section
 - an array of `run`-sections
 
 ```toml
+[settings]
+# Settings for subcommands
+
 [variables]
 # Custom variables
 
@@ -47,6 +54,22 @@ Backer's config is structured into
 
 [[run]]
 # ...
+```
+
+### [settings]
+This section allows you to configure cosmetic settings, 
+like the output format of individual subcommands.
+
+For reference, here's all the default values:
+```toml
+[settings.run]
+pretty = true
+colors = true
+
+[settings.preview]
+interactive = false
+pretty = true
+colors = true
 ```
 
 ### [variables]
